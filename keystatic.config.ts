@@ -1,12 +1,23 @@
-import { config, fields, collection } from '@keystatic/core';
-
+import { config, fields, collection, singleton } from '@keystatic/core';
+import React from 'react';
 export default config({
   storage: {
-    kind: 'github',
-    repo: {
+    kind: 'local',
+    /* repo: {
       owner: 'CharlesAustin',
-      name: 'robertscosmos'
-    }
+      name: 'robertscosmos-keystatic'
+    } */
+  },
+  ui: {
+    brand: {
+      name: 'Robert\'s Cosmos',
+      mark: ({ colorScheme }) => {
+        let path = colorScheme === 'dark'
+            ? `//127.0.0.1:4321/src/assets/images/logo-only-fill-white.svg`
+            : `//127.0.0.1:4321/src/assets/images/logo-only-fill-dark.svg`;
+        return React.createElement('img', { src: path, height: 24});
+      },
+    },
   },
   collections: {
     posts: collection({
@@ -16,6 +27,7 @@ export default config({
       format: { contentField: 'content' },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
+        publishedDate: fields.date({ label: 'Published date'}),
         content: fields.document({
           label: 'Content',
           formatting: true,
@@ -29,4 +41,10 @@ export default config({
       },
     }),
   },
+  singletons: {
+    home: singleton({
+      label: 'Homepage',
+      schema: {}
+    }),
+  }
 });
